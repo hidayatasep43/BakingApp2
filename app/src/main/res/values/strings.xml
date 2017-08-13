@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BakingApp</string>
+    <string name="no_recipe_data_label">No recipe data</string>
+    <string name="error_label">Oops error occured</string>
+</resources>
