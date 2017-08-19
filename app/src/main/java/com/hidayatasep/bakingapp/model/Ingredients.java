@@ -1,8 +1,12 @@
 package com.hidayatasep.bakingapp.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import timber.log.Timber;
 
 /**
  * Created by hidayatasep43 on 8/13/2017.
@@ -11,11 +15,12 @@ import io.realm.annotations.PrimaryKey;
 public class Ingredients extends RealmObject{
 
     @PrimaryKey
-    private long id;
+    public long id;
 
-    private int mQuantity;
-    private String mMeasure;
-    private String mIngredient;
+    public int mQuantity;
+    public String mMeasure;
+    public String mIngredient;
+    public Recipe mRecipe;
 
     public Ingredients() {
     }
@@ -27,36 +32,14 @@ public class Ingredients extends RealmObject{
         mIngredient = ingredient;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getQuantity() {
-        return mQuantity;
-    }
-
-    public void setQuantity(int quantity) {
-        mQuantity = quantity;
-    }
-
-    public String getMeasure() {
-        return mMeasure;
-    }
-
-    public void setMeasure(String measure) {
-        mMeasure = measure;
-    }
-
-    public String getIngredient() {
-        return mIngredient;
-    }
-
-    public void setIngredient(String ingredient) {
-        mIngredient = ingredient;
+    public Ingredients(JSONObject object){
+        try {
+            mQuantity = object.getInt("quantity");
+            mMeasure = object.getString("measure");
+            mIngredient = object.getString("ingredient");
+        } catch (JSONException e) {
+            Timber.e(e.toString());
+        }
     }
 
     public static long getPrimaryKey(Realm realm){

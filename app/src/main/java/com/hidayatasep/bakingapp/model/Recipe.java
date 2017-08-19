@@ -1,10 +1,14 @@
 package com.hidayatasep.bakingapp.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
+import timber.log.Timber;
 
 /**
  * Created by hidayatasep43 on 8/13/2017.
@@ -13,50 +17,27 @@ import io.realm.annotations.PrimaryKey;
 public class Recipe extends RealmObject {
 
     @PrimaryKey
-    private long id;
-
-    private String mName;
-    private RealmList<Ingredients> mListIngredients;
-    private RealmList<Steps> mListSteps;
+    public long id;
+    public String mName;
+    public RealmList<Ingredients> mListIngredients;
+    public RealmList<Steps> mListSteps;
 
     public Recipe() {
+        mListIngredients = new RealmList<>();
+        mListSteps = new RealmList<>();
     }
 
-    public long getId() {
-        return id;
+    public Recipe(JSONObject jsonObject) {
+        try {
+            id = jsonObject.getLong("id");
+            mName = jsonObject.getString("name");
+        } catch (JSONException e) {
+            Timber.e(e.toString());
+        }
+        mListIngredients = new RealmList<>();
+        mListSteps = new RealmList<>();
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return mName;
-    }
-
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public RealmList<Ingredients> getListIngredients() {
-        return mListIngredients;
-    }
-
-    public void setListIngredients(RealmList<Ingredients> listIngredients) {
-        mListIngredients = listIngredients;
-    }
-
-    public RealmList<Steps> getListSteps() {
-        return mListSteps;
-    }
-
-    public void setListSteps(RealmList<Steps> listSteps) {
-        mListSteps = listSteps;
-    }
-
-    public static RealmResults<Recipe> getAllRecipe(Realm realm){
-        return realm.where(Recipe.class).findAllSorted("id");
-    }
 
     public static boolean checkRecipeData(Realm realm){
         int count = realm.where(Recipe.class).findAllSorted("id").size();
@@ -64,5 +45,9 @@ public class Recipe extends RealmObject {
             return false;
         }
         return true;
+    }
+
+    public static RealmResults<Recipe> getAllRecipe(Realm realm){
+        return realm.where(Recipe.class).findAll();
     }
 }
